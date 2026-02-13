@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Special Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- GAYA TAMPILAN (CSS) --- */
+        :root {
+            --pink-light: #ffe6ea;
+            --pink-med: #ffb7c5;
+            --red-main: #d32f2f;
+            --red-dark: #b71c1c;
+            --white: #ffffff;
+            --paper-texture: #fffdf9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--pink-light);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--red-dark);
+            overflow-x: hidden;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--paper-texture);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigasi */
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            animation: fadeIn 0.8s ease;
+            flex-grow: 1;
+        }
+        .page.active { display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HALAMAN 1: AMPLOP --- */
+        #page-landing { justify-content: center; align-items: center; background: var(--pink-light); }
+        .envelope-container { position: relative; cursor: pointer; width: 300px; height: 200px; transition: transform 0.3s; }
+        .envelope-container:active { transform: scale(0.98); }
+        
+        .envelope {
+            position: absolute; bottom: 0; width: 100%; height: 100%;
+            background: var(--pink-med); border-radius: 0 0 10px 10px; z-index: 2;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .flap {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 150px solid transparent; border-right: 150px solid transparent;
+            border-top: 110px solid var(--pink-med);
+            transform-origin: top; transition: transform 0.6s; z-index: 4;
+        }
+        .envelope-container.open .flap { transform: rotateX(180deg); z-index: 1; }
+        
+        .letter {
+            position: absolute; bottom: 0; left: 25px; width: 250px; height: 180px;
+            background: white; padding: 15px; text-align: center;
+            transition: transform 0.6s 0.4s; z-index: 1;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .envelope-container.open .letter { transform: translateY(-100px); z-index: 5; }
+        .heart-seal { font-size: 40px; color: var(--red-main); z-index: 5; }
+        .click-hint { margin-top: 50px; font-size: 0.8rem; color: #888; animation: bounce 2s infinite; }
+
+        /* --- HALAMAN 2: KORAN --- */
+        .newspaper-header { text-align: center; border-bottom: 2px solid var(--red-dark); padding-bottom: 10px; margin-bottom: 20px; }
+        .brand { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: bold; text-transform: uppercase; }
+        .headline { font-family: 'Playfair Display', serif; font-size: 2.2rem; line-height: 1; color: var(--red-main); text-align: center; margin-bottom: 20px; font-style: italic; }
+        
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .article-text { font-size: 0.8rem; text-align: justify; line-height: 1.4; }
+        
+        .photo-column { display: flex; flex-direction: column; gap: 10px; }
+        .photo-frame {
+            width: 100%; height: 120px; background: #eee;
+            border: 1px solid var(--red-dark); overflow: hidden;
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        .ticket-section { display: flex; flex-direction: column; gap: 10px; margin-top: auto; align-items: center;}
+        .ticket-img { width: 90%; max-width: 300px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transform: rotate(-2deg); }
+        .ticket-img:last-child { transform: rotate(2deg); }
+
+        /* --- HALAMAN 3: GAME --- */
+        #page-game { background-color: var(--pink-light); align-items: center; justify-content: center; }
+        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 300px; height: 300px; background: var(--red-main); border: 5px solid var(--red-main); border-radius: 10px; }
+        .cell { background: white; display: flex; justify-content: center; align-items: center; font-size: 3rem; cursor: pointer; color: var(--red-main); }
+        
+        /* --- HALAMAN 4: FINAL --- */
+        .reasons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .reason-box { background: #fff; padding: 15px; border: 1px solid var(--pink-med); text-align: center; }
+        .btn-yes { background: var(--red-main); color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
+        
+        .nav-btn { padding: 10px 20px; background: transparent; border: 1px solid var(--red-dark); color: var(--red-dark); font-weight: bold; cursor: pointer; margin-top: 10px; align-self: flex-end; }
+        .nav-container { width: 100%; display: flex; justify-content: space-between; margin-top: auto; padding-top: 20px;}
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .modal-paper { background: white; width: 80%; padding: 30px; text-align: center; transform: rotate(-2deg); }
+        @keyframes bounce { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-10px);} }
+    </style>
+</head>
+<body>
+
+<div class="mobile-container">
+<audio id="lagu" loop>
+    <source src="lagu.mp3" type="audio/mpeg">
+</audio>
+
+    <section id="page-landing" class="page active">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="font-family: 'Playfair Display'">Special Delivery</h2>
+        </div>
+
+        <div class="envelope-container" onclick="handleEnvelopeClick()">
+            <div class="flap"></div>
+            <div class="envelope">
+                <div class="heart-seal">❤</div>
+            </div>
+            <div class="letter">
+                <p style="font-size: 0.7rem; color: #888;">Dari: [Ur handsome Guy]</p>
+                <h3 style="font-family: 'Playfair Display'; margin: 10px 0; font-size: 1.2rem;">
+                    Happy Valentine!
+                </h3>
+                <p style="font-size: 0.8rem;">Klik love to enter our heart</p>
+                <p style="font-size: 0.7rem; color: #888; margin-top: auto;">Untuk: [My Honey]</p>
+            </div>
+        </div>
+        <div class="click-hint" id="hint-text">Klik amplopnya ya!</div>
+    </section>
+
+    <section id="page-newspaper" class="page">
+        <div class="newspaper-header">
+            <div class="brand">BREAKING NEWS</div>
+            <div class="brand" style="font-size: 0.8rem; letter-spacing: 2px;">SPESIAL EDITION</div>
+        </div>
+
+        <div class="headline">HAPPY VALENTINE!!!</div>
+
+        <div class="content-grid">
+            <div class="article-text">
+                <b>To my love.</b><br><br>
+              There are no words that can fully express how much u mean to me, but i"ll try my best. Maybe your days have felt heavy lately. Don't hesitate to always tell me about it because I’m very happy to be bothered by you.Suatu saat nanti, semua jarak ini akan berubah menjadi cerita indah tentang betapa kuatnya kita bertahan. Hingga hari itu tiba, biarlah Valentine ini menjadi pengingat bahwa aku mencintaimu dengan sederhana, tulus, dan tanpa syarat. Selamat Valentine, sayangku… semoga cinta kita terus tumbuh seperti bunga yang mekar, meski dirawat dari kejauhan. Dan kita harus booking tiket agenda buat ketemu nanti yaa
+            </div>
+            
+            <div class="photo-column">
+                <div class="photo-frame">
+                    <img src="foto-koran-1.jpeg" alt="Foto 1">
+                </div>
+                <div class="photo-frame">
+                    <img src="foto-koran-2.jpeg" alt="Foto 2">
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-section">
+            <img src="tiket-makan.webp" class="ticket-img" alt="Tiket Makan">
+            <img src="tiket-nonton.jpg" class="ticket-img" alt="Tiket Nonton">
+        </div>
+
+        <div class="nav-container">
+            <div></div> 
+            <button class="nav-btn" onclick="changePage('page-game')">Lanjut -></button>
+        </div>
+    </section>
+
+    <section id="page-game" class="page">
+        <h2 style="font-family: 'Playfair Display'; text-align: center; margin-bottom: 20px;">
+            Main dulu yuk!<br><small style="font-size: 0.8rem">Kalahkan aku untuk menang (3 baris)</small>
+        </h2>
+        
+        <div class="board" id="board">
+            <div class="cell" onclick="userMove(0)"></div>
+            <div class="cell" onclick="userMove(1)"></div>
+            <div class="cell" onclick="userMove(2)"></div>
+            <div class="cell" onclick="userMove(3)"></div>
+            <div class="cell" onclick="userMove(4)"></div>
+            <div class="cell" onclick="userMove(5)"></div>
+            <div class="cell" onclick="userMove(6)"></div>
+            <div class="cell" onclick="userMove(7)"></div>
+            <div class="cell" onclick="userMove(8)"></div>
+        </div>
+
+        <div class="nav-container">
+            <button class="nav-btn" onclick="changePage('page-newspaper')"><- Kembali</button>
+            <button class="nav-btn" onclick="changePage('page-final')">Lewati -></button>
+        </div>
+    </section>
+
+    <section id="page-final" class="page">
+        <h2 class="headline" style="font-size: 1.8rem;"> Alasan Kita Sempurna</h2>
+        
+        <div class="photo-frame" style="height: 150px; margin-bottom: 20px;">
+             <img src="foto-final.jpeg" alt="Foto Utama">
+        </div>
+
+        <div class="reasons-grid">
+            <div class="reason-box"><small>Aku suka kamu</small></div>
+            <div class="reason-box"><small>Kamu suka aku</small></div>
+            <div class="reason-box"><small>Saling Effort</small></div>
+            <div class="reason-box"><small>Saling pengertian</small></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <p>So, will u be my always valentine?</p>
+            <div style="margin-top: 10px;">
+                <button class="btn-yes" onclick="alert('Yay! love you! ❤')">tentu, dengan senang hati</button>
+                <button class="btn-yes" style="background: var(--pink-med); color: var(--red-dark)" onclick="alert('Aku tau pasti bilang mau wkwk')">iyaa, mau bangettt</button>
+            </div>
+        </div>
+        
+        <div class="nav-container">
+             <button class="nav-btn" onclick="changePage('page-game')"><- Kembali</button>
+        </div>
+    </section>
+
+</div>
+
+<div class="modal-overlay" id="winModal">
+    <div class="modal-paper">
+        <h2 style="font-family: 'Playfair Display'; color: var(--red-main);">Kamu Menang!</h2>
+        <p style="margin: 20px 0;">Wah jagooo! kamu pantes dapetin my heartt!! ❤</p>
+        <button class="nav-btn" onclick="closeModalAndNext()">Buka Hadiah -></button>
+    </div>
+</div>
+
+<script>
+    // --- NAVIGASI ---
+    function changePage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        if(pageId === 'page-game') resetGame(); // Reset game saat masuk halaman game
+    }
+
+    // --- AMPLOP ---
+    let isEnvelopeOpen = false;
+    function handleEnvelopeClick() {
+        const container = document.querySelector('.envelope-container');
+        const hint = document.getElementById('hint-text');
+
+        const audio  = document.getElementById('lagu');
+        audio.volume = 0.5; // Mengatur volume (0.1 sampai 1.0)
+        audio.play().catch(error => console.log("Gagal putar otomatis: ", error));
+
+        if (!isEnvelopeOpen) {
+            container.classList.add('open');
+            isEnvelopeOpen = true;
+            hint.innerText = "Klik suratnya untuk membaca...";
+        } else {
+            changePage('page-newspaper');
+        }
+    }
+
+    // --- LOGIKA GAME TIC-TAC-TOE (BOT LAWAN) ---
+    let boardState = ["", "", "", "", "", "", "", "", ""];
+    let gameActive = true;
+    const winConditions = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+
+    // 1. Giliran User (Manusia)
+    function userMove(index) {
+        if (boardState[index] !== "" || !gameActive) return;
+        
+        // Isi kotak dengan 'O' (Player)
+        updateBoard(index, 'O'); 
+        
+        // Cek apakah user menang
+        if (!checkWinOrDraw('O')) {
+            // Jika belum menang, giliran Bot jalan setelah jeda 0.5 detik
+            setTimeout(botMove, 500); 
+        }
+    }
+
+    // 2. Giliran Bot (Komputer)
+    function botMove() {
+        if (!gameActive) return;
+
+        // Cari kotak yang masih kosong
+        let emptySlots = [];
+        boardState.forEach((cell, i) => {
+            if (cell === "") emptySlots.push(i);
+        });
+
+        if (emptySlots.length > 0) {
+            // Bot pilih kotak acak
+            const randomIndex = emptySlots[Math.floor(Math.random() * emptySlots.length)];
+            
+            // Isi kotak dengan 'H' (Hati/Bot)
+            updateBoard(randomIndex, 'H');
+            
+            // Cek apakah bot menang
+            checkWinOrDraw('H');
+        }
+    }
+
+    // Update Tampilan Papan
+    function updateBoard(index, player) {
+        boardState[index] = player;
+        const cell = document.getElementsByClassName('cell')[index];
+        // Player = Lingkaran, Bot = Hati
+        cell.innerText = player === 'O' ? '⭕' : '❤'; 
+        cell.style.color = player === 'O' ? '#d32f2f' : '#ffb7c5';
+    }
+
+    // Cek Pemenang
+    function checkWinOrDraw(player) {
+        let won = false;
+        for (let condition of winConditions) {
+            let [a, b, c] = condition;
+            if (boardState[a] === player && boardState[b] === player && boardState[c] === player) {
+                won = true;
+                break;
+            }
+        }
+
+        if (won) {
+            gameActive = false;
+            if (player === 'O') {
+                // User Menang -> Tampilkan Pop-up
+                setTimeout(() => document.getElementById('winModal').style.display = 'flex', 500);
+            } else {
+                // Bot Menang -> Alert dan Reset
+                setTimeout(() => {
+                    alert("Yah, kamu kalah sama bot hatiku! Coba lagi ya sampai menang :p");
+                    resetGame();
+                }, 500);
+            }
+            return true;
+        }
+
+        if (!boardState.includes("")) {
+            // Seri -> Alert dan Reset
+            gameActive = false;
+            setTimeout(() => {
+                alert("Seri! Hati kita seimbang nih. Coba lagi yuk.");
+                resetGame();
+            }, 500);
+            return true;
+        }
+
+        return false;
+    }
+
+    function resetGame() {
+        boardState = ["", "", "", "", "", "", "", "", ""];
+        gameActive = true;
+        document.querySelectorAll('.cell').forEach(cell => cell.innerText = "");
+    }
+
+    function closeModalAndNext() {
+        document.getElementById('winModal').style.display = 'none';
+        changePage('page-final');
+    }
+</script>
+
+</body>
+</html>
